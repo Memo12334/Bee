@@ -3,7 +3,7 @@ import { handleRole } from '../utils/handleRole';
 import { snipe } from '../utils/snipe';
 import { purge } from '../utils/purge';
 
-const prefixes = ['!', '++', '.']
+const prefixes = ['!', '++snipe', '.']
 
 export const onMessage = async (message: Message) => {
   const prefix = prefixes.find(p => message.content.startsWith(p))
@@ -13,8 +13,8 @@ export const onMessage = async (message: Message) => {
     case '!':
       await handleRole(message, arg)
       break
-    case '++':
-      await snipe(message, arg)
+    case '++snipe':
+      await snipe(message)
       break
     case '.':
       await purge(message, arg)
