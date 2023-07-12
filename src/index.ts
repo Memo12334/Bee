@@ -1,13 +1,16 @@
 import config from './config'
 
-import { GatewayIntentBits, Client, Events } from 'discord.js'
+import { GatewayIntentBits, Client, Events, Partials } from 'discord.js'
 import { onInteraction } from './events/onInteraction'
 import { onReady } from './events/onReady'
 import { onMessage } from './events/onMessage.'
+import { addDeleted } from './utils/snipe'
+import { error } from 'console'
 
 (async () => {
   const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
+    partials: [Partials.Message]
   })
 
   client.on(Events.ClientReady, async () => {
@@ -20,6 +23,14 @@ import { onMessage } from './events/onMessage.'
 
   client.on(Events.MessageCreate, async (message) => {
     await onMessage(message)
+  })
+
+  client.on(Events.MessageDelete, async (message) => {
+    if (message.partial) {
+      return
+    }
+
+    await addDeleted(message)
   })
 
   try {
